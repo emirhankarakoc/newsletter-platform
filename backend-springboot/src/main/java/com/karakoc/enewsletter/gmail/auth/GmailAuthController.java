@@ -67,8 +67,7 @@ public class GmailAuthController {
 
         // Kullanıcının giriş email'i ile devam ediyoruz, Gmail hesabı farklı olabilir
         String newToken = tokenManager.issue(userId, loginEmail, jwt.getClaim("a").asList(String.class));
-        String redirectUrl = frontendUrl + "/oauth-success?token=" + newToken;
-        log.info("Yeni token: {}", newToken);
+        String redirectUrl = frontendUrl + "/oauth-success#token=" + newToken;
         response.sendRedirect(redirectUrl);
     }
 
