@@ -33,4 +33,3 @@ mvn spring-boot:run
 
 In a second terminal, open `frontend-reactjs/`. Set `VITE_GOOGLE_CLIENT_ID` to the same Google client ID, then run `npm install` and `npm run dev`. The local API and client URL defaults are `http://localhost:8080` and `http://localhost:5173`; use `VITE_API_URL` and `VITE_CLIENT_URL` to change them.
 
-This is a project app. It has a basic Spring context test, but no automated end-to-end test for Google login or mail sending.
