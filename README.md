@@ -1,45 +1,36 @@
 # Newsletter Platform
 
-A Spring Boot and React application for creating newsletters, collecting subscribers, and sending personalized HTML messages through a connected Gmail account.
+This app lets a creator make a newsletter, collect subscribers, and send an HTML email from a connected Gmail account.
 
-## What the code does
+## What it does
 
-1. A creator registers and manages newsletters, descriptions, and images.
-2. Readers subscribe; the backend checks duplicate subscriptions and supports unsubscribe.
-3. The creator connects a Google account through OAuth. The backend stores the Google token and refreshes it when needed.
-4. A send request takes an HTML template, replaces subscriber/newsletter placeholders, and calls the Gmail API for each recipient.
+1. The creator adds a newsletter with a name, description, and image.
+2. Readers subscribe. The backend checks for duplicate subscriptions and supports unsubscribe.
+3. The creator connects a Google account with OAuth.
+4. The creator uploads an HTML email. The backend adds subscriber details to the text and sends it through the Gmail API.
 
-The app's own authentication uses Spring Security/JWT. Google OAuth is used separately to authorize Gmail sending.
+The app uses its own JWT login for users. Google OAuth is only for connecting a Gmail account and sending mail.
 
-## Stack and code map
+## Tech and code
 
-- Java 17, Spring Boot 3.3, Spring Data JPA, MySQL, Spring Security/JWT
-- Google OAuth and Gmail API
-- React, TypeScript, Vite
-- AWS SDK `S3Client` pointed at Cloudflare R2 for images (S3-compatible storage, not AWS hosting)
+Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, Google OAuth, Gmail API, React, TypeScript, and Vite. Images use the AWS S3 SDK with **Cloudflare R2**, an S3-compatible service. The app is not hosted on AWS.
 
-| Component | Path |
-| --- | --- |
-| Newsletter and subscription APIs | `backend-springboot/src/main/java/com/karakoc/enewsletter/newsletters/`, `customers/` |
-| Google connection and token handling | `backend-springboot/src/main/java/com/karakoc/enewsletter/gmail/auth/`, `googletoken/` |
-| Personalized Gmail delivery | `backend-springboot/src/main/java/com/karakoc/enewsletter/gmail/mail/GmailMailManager.java` |
-| Client screens | `frontend-reactjs/src/pages/` |
+- Newsletters and subscribers: `backend-springboot/src/main/java/com/karakoc/enewsletter/newsletters/` and `customers/`
+- Google connection: `backend-springboot/src/main/java/com/karakoc/enewsletter/gmail/auth/`
+- Gmail sending: `backend-springboot/src/main/java/com/karakoc/enewsletter/gmail/mail/GmailMailManager.java`
+- React pages: `frontend-reactjs/src/pages/`
 
-## Local setup
+## Run locally
 
-Requires Java 17, Maven, MySQL, Node.js, a Google OAuth client with a callback URL configured for your backend, and your own R2-compatible storage values for image features.
+You need Java 17, Maven, MySQL, Node.js, a Google OAuth client, and R2 settings if you want to upload images. The OAuth client's callback URL must point to `/connect/google/callback` on your backend.
 
-Set `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `R2_ACCESS_KEY`, `R2_SECRET_KEY`, `R2_ENDPOINT`, `R2_BUCKET_NAME`, and `R2_PUBLIC_URL` for the backend. The complete property list is in `backend-springboot/src/main/resources/application.properties`. Use the same Google client ID in the frontend as `VITE_GOOGLE_CLIENT_ID`.
+Set `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REDIRECT_URI` for the backend. Add `R2_*` values for images. All backend settings are in `backend-springboot/src/main/resources/application.properties`.
 
 ```bash
 cd backend-springboot
 mvn spring-boot:run
-
-# In another terminal, from the repository root:
-cd frontend-reactjs
-npm install
-VITE_API_URL=http://localhost:8080 VITE_CLIENT_URL=http://localhost:5173 \
-VITE_GOOGLE_CLIENT_ID=your-client-id npm run dev
 ```
 
-This is a portfolio prototype, not a hosted newsletter service or a claim of paying users. External Google/R2 setup is required for the complete send-and-image flow. The existing backend test is a Spring context smoke test; Gmail delivery is not covered by automated end-to-end tests here.
+In a second terminal, open `frontend-reactjs/`. Set `VITE_GOOGLE_CLIENT_ID` to the same Google client ID, then run `npm install` and `npm run dev`. The local API and client URL defaults are `http://localhost:8080` and `http://localhost:5173`; use `VITE_API_URL` and `VITE_CLIENT_URL` to change them.
+
+This is a project app. It has a basic Spring context test, but no automated end-to-end test for Google login or mail sending.
