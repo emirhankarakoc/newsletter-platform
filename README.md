@@ -13,7 +13,7 @@ The app uses its own JWT login for users. Google OAuth is only for connecting a 
 
 ## Tech and code
 
-Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, Google OAuth, Gmail API, React, TypeScript, and Vite. Images use the AWS S3 SDK with **Cloudflare R2**, an S3-compatible service. The app is not hosted on AWS.
+Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, Google OAuth, Gmail API, React, TypeScript, and Vite. Images use the AWS S3 SDK with **Cloudflare R2**, an S3-compatible service. 
 
 - Newsletters and subscribers: `backend-springboot/src/main/java/com/karakoc/enewsletter/newsletters/` and `customers/`
 - Google connection: `backend-springboot/src/main/java/com/karakoc/enewsletter/gmail/auth/`
